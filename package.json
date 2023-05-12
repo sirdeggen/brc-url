@@ -1,0 +1,11 @@
+{
+  "name": "brc-url",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://sirdeggen@github.com/sirdeggen/brc-url.git",
+  "author": "Darren Kellenschwiler <deggen@kschw.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
