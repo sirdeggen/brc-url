@@ -1,8 +1,8 @@
 const app = require('express')();
 
-app.get('/api/:slug', (req, res) => {
-    const { slug } = req.params;
-    res.redirect('https://bsv.brc.dev/' + slug, 308);
+app.get('/:brc', (req, res) => {
+    const { brc } = req.params;
+    res.status(308).redirect('https://bsv.brc.dev/' + brc);
 });
 
 module.exports = app;
