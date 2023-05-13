@@ -1,6 +1,4 @@
 'use client'
-import 'styles/global.css'
-import Head from 'next/head'
 import { useForm } from 'react-hook-form'
 import { useEffect, useState } from 'react'
 
@@ -15,7 +13,11 @@ export default function Page() {
 
     useEffect(() => {
         const key = localStorage.getItem('key')
-        if (key) setKey(key)
+        if (key) {
+            setKey(key)
+        } else {
+            setKey('no key')
+        }
     }, [])
 
     function initKey({ key }) {
@@ -49,18 +51,19 @@ export default function Page() {
     if (!key)
         return (
             <div>
-                <Head>
-                    <title>BRC shortURLs</title>
-                    <meta name="description" content="Short URL manager for BRC repo" />
-                </Head>
+                <main>
+                    <h1>Authorizing...</h1>
+                </main>
+            </div>
+        )
+    if (key === 'no key')
+        return (
+            <div>
                 <main>
                     <h1>BRC Short URL manager</h1>
                     <p>Admin only please add key</p>
                     <form onSubmit={handleSubmit(initKey)}>
-                        <input
-                            defaultValue={'6beb94782468b98a0ba1e84665dd14b0d18361c0610179b6cf93049943e50b84'}
-                            {...register('key', { required: true })}
-                        />
+                        <input defaultValue={''} {...register('key', { required: true })} />
                         {errors.key && <span>This field is required</span>}
 
                         <input type="submit" />
@@ -70,10 +73,6 @@ export default function Page() {
         )
     return (
         <div>
-            <Head>
-                <title>BRC shortURLs</title>
-                <meta name="description" content="Short URL manager for BRC repo" />
-            </Head>
             <main>
                 <h1>BRC Short URL manager</h1>
                 <p>Add a short URL map here</p>
