@@ -1,6 +1,5 @@
 const app = require('express')();
 const { kv } = require("@vercel/kv");
-const bearerToken = require('express-bearer-token');
 
 async function redirectTraffic(req, res) {
     try {
@@ -15,9 +14,8 @@ async function redirectTraffic(req, res) {
 
 async function setBRCUrl(req, res) {
     try {
-        if (req["token"] !== process.env.BEARER_TOKEN) return res.status(401).json({ error: 'you need a token' });
-        console.log({ req })
-        const { brc, path } = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+        const { brc, path, token } = req.body
+        if (token !== process.env.BEARER_TOKEN) return res.status(401).json({ error: 'token in body is invalid' });
         await kv.set(brc, path);
         return res.status(201).json({ [brc]: path });
     } catch (error) {
@@ -26,7 +24,6 @@ async function setBRCUrl(req, res) {
     }
 }
 
-app.use(bearerToken());
 app.get('/', redirectTraffic);
 app.get('/:brc', redirectTraffic);
 app.post('/set/url', setBRCUrl);
