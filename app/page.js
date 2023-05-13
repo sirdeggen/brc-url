@@ -33,14 +33,13 @@ export default function Page() {
     const onSubmit = async data => {
         try {
             data.key = key || localStorage.getItem('key') || ''
-            const res = await fetch('/api/set/url', {
+            const res = await fetch('/set/url', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
             })
             if (res?.error) return {}
             const result = await res.json()
-            console.log({ result })
             return setBrc(result)
         } catch (error) {
             console.log({ error })

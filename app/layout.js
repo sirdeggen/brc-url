@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import 'styles/global.css'
+import './globals.css'
 
 export default function RootLayout({ children }) {
     return (

@@ -1,8 +1,7 @@
 {
-  "name": "ef",
+  "name": "brc-url",
   "version": "0.1.0",
-  "private": false,
-  "license": "MIT",
+  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -10,17 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@vercel/kv": "^0.2.0",
-    "eslint": "8.26.0",
-    "eslint-config-next": "13.0.2",
-    "next": "^13.4.2",
+    "eslint": "8.40.0",
+    "eslint-config-next": "13.4.2",
+    "next": "13.4.2",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-hook-form": "^7.43.9"
-  },
-  "devDependencies": {
-    "@types/node": "20.1.4",
-    "@types/react": "18.2.6",
-    "typescript": "5.0.4"
+    "react-dom": "18.2.0"
   }
 }
