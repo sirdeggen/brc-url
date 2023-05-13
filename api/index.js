@@ -2,6 +2,7 @@ const app = require('express')();
 
 app.get('/:brc', (req, res) => {
     const { brc } = req.params;
+    if (!brc) return res.status(308).redirect('https://bsv.brc.dev');
     res.status(308).redirect('https://bsv.brc.dev/' + brc);
 });
 
