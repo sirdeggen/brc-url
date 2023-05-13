@@ -16,7 +16,7 @@ async function redirectTraffic(req, res) {
 async function setBRCUrl(req, res) {
     try {
         if (req["token"] !== process.env.BEARER_TOKEN) return res.status(401).json({ error: 'you need a token' });
-        console.log({ body: req.body })
+        console.log({ req })
         const { brc, path } = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
         await kv.set(brc, path);
         return res.status(201).json({ [brc]: path });
