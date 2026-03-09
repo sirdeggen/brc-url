@@ -38,10 +38,14 @@ function parseReadmeTable(markdown) {
           // Extract the path from the markdown link [title](path)
           const linkMatch = standardCell.match(/\[([^\]]+)\]\(([^)]+)\)/)
           if (linkMatch) {
-            const path = linkMatch[2]
-            // Normalize path to /overlays/00XX format if needed
-            const normalizedPath = normalizePath(path, brcNum)
-            mappings.push({ brc: brcNum, path: normalizedPath })
+            const githubPath = linkMatch[2]
+            const convertedPath = convertPath(githubPath)
+            if (convertedPath) {
+              mappings.push({ brc: brcNum, path: convertedPath })
+            }
+          } else if (standardCell === '(unused)') {
+            // Skip unused entries
+            continue
           }
         }
       }
@@ -59,16 +63,14 @@ function parseReadmeTable(markdown) {
   return mappings
 }
 
-// Normalize path to /overlays/00XX format
-function normalizePath(originalPath, brcNum) {
-  // If path already looks like /overlays/0024, use it
-  if (originalPath.match(/^\/overlays\/\d+/)) {
-    return originalPath
+// Convert GitHub path to URL path
+function convertPath(githubPath) {
+  if (!githubPath || githubPath === '—' || githubPath === '-') {
+    return null
   }
 
-  // Otherwise, construct the standard format
-  const paddedNum = String(brcNum).padStart(4, '0')
-  return `/overlays/${paddedNum}`
+  // Remove leading ./ and convert to /path format
+  return '/' + githubPath.replace(/^\.\//, '')
 }
 
 export async function POST(req) {
