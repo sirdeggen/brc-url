@@ -69,8 +69,8 @@ function convertPath(githubPath) {
     return null
   }
 
-  // Remove leading ./ and convert to /path format
-  return '/' + githubPath.replace(/^\.\//, '')
+  // Remove leading ./ and .md suffix, convert to /path format
+  return '/' + githubPath.replace(/^\.\//, '').replace(/\.md$/, '')
 }
 
 export async function POST(req) {
