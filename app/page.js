@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react'
 export default function Page() {
     const [response, setBrc] = useState(null)
     const [key, setKey] = useState(null)
+    const [syncLoading, setSyncLoading] = useState(false)
+    const [syncResult, setSyncResult] = useState(null)
     const {
         register,
         handleSubmit,
@@ -28,6 +30,24 @@ export default function Page() {
     function logout() {
         localStorage.removeItem('key')
         setKey(null)
+    }
+
+    async function syncReadme() {
+        setSyncLoading(true)
+        setSyncResult(null)
+        try {
+            const res = await fetch('/sync/readme', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key: key || localStorage.getItem('key') || '' }),
+            })
+            const result = await res.json()
+            setSyncResult(result)
+        } catch (error) {
+            setSyncResult({ error: error.message })
+        } finally {
+            setSyncLoading(false)
+        }
     }
 
     const onSubmit = async data => {
@@ -93,6 +113,46 @@ export default function Page() {
                         </div>
                     )}
                 </form>
+
+                <div style={{ marginTop: '2rem', borderTop: '1px solid #ccc', paddingTop: '1rem' }}>
+                    <h2>Sync from GitHub</h2>
+                    <button
+                        onClick={syncReadme}
+                        disabled={syncLoading}
+                        style={{
+                            padding: '0.5rem 1rem',
+                            fontSize: '1rem',
+                            cursor: syncLoading ? 'not-allowed' : 'pointer',
+                            opacity: syncLoading ? 0.6 : 1
+                        }}
+                    >
+                        {syncLoading ? 'Scanning...' : 'Scan README.md'}
+                    </button>
+
+                    {syncResult && (
+                        <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: syncResult.error ? '#fee' : '#efe', borderRadius: '4px' }}>
+                            {syncResult.error ? (
+                                <p style={{ color: '#c00' }}>Error: {syncResult.error}</p>
+                            ) : (
+                                <>
+                                    <p style={{ color: '#060' }}>
+                                        ✓ Synced {syncResult.registered} mappings
+                                        {syncResult.failed > 0 && ` (${syncResult.failed} failed)`}
+                                    </p>
+                                    {syncResult.failed > 0 && (
+                                        <details>
+                                            <summary>Failed mappings:</summary>
+                                            <pre style={{ fontSize: '0.8rem', overflow: 'auto' }}>
+                                                {JSON.stringify(syncResult.errors, null, 2)}
+                                            </pre>
+                                        </details>
+                                    )}
+                                </>
+                            )}
+                        </div>
+                    )}
+                </div>
+
                 <button onClick={logout}>Logout</button>
             </main>
         </div>
