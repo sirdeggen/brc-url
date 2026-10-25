@@ -123,11 +123,16 @@ print(f"Created mapping: {result}")
 curl -L https://brc.dev/20
 ```
 
-**Response:** HTTP 307 Temporary Redirect to `https://bsv.brc.dev{path}`
+**Response:**
+
+- HTTP 307 Temporary Redirect to `https://bsv.brc.dev{path}` when the stored value is a path starting with `/`
+- HTTP 404 when the number has no stored value, or the stored value is not a path starting with `/`
 
 **Example:**
 - Request: `GET https://brc.dev/20`
 - Response: Redirects to `https://bsv.brc.dev/specs/brc-20-tokens`
+- Request: `GET https://brc.dev/212`
+- Response: HTTP 404
 
 ---
 
@@ -143,6 +148,7 @@ The `POST /set/url` endpoint requires a valid admin key. The key must match the 
 |--------|-------|---------|
 | 400 | Invalid request | Malformed JSON or missing required fields |
 | 401 | key is invalid | The provided admin key does not match the server key |
+| 404 | Not found | `GET /:brc` has no stored path, or the stored value does not start with `/` |
 | 200 | Success | Mapping registered successfully |
 
 ## Usage for Bots
@@ -203,6 +209,12 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Tests
+
+```bash
+yarn test
+```
 
 ### Environment Variables
 
