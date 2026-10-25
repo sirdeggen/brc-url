@@ -1,8 +1,13 @@
 import { redirect } from 'next/navigation'
-import {kv} from '@vercel/kv'
+import { NextResponse } from 'next/server'
+import { kv } from '@vercel/kv'
+import { redirectUrl } from '../../lib/redirect-url.js'
 
-export async function GET(req, { params: { brc } }) {
-    const p = await kv.get(brc)
-    const path = 'https://bsv.brc.dev' + p || ''
-    redirect(path)
+export async function GET(_req, { params }) {
+    const { brc } = await params
+    const target = redirectUrl(await kv.get(brc))
+    if (!target) {
+        return new NextResponse('Not found', { status: 404 })
+    }
+    redirect(target)
 }
